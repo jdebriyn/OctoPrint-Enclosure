@@ -66,6 +66,9 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
 
         self.heater = EnclosureGPIO(self._settings.get_int(["heaterPin"]),"heater",self._settings.get(["heaterActiveLow"]), self._settings.get(["heaterEnable"]),True,True,0)
 
+	self.fan = EnclosureGPIO(self._settings.get_int(["fanPin"]),"fan",self._settings.get(["fanActiveLow"]), self._settings.get(["fanEnable"]),True,True,0)
+
+	
         self.filamentSensor = EnclosureGPIO(self._settings.get_int(["filamentSensorPin"]),"filamentSensor",False,self._settings.get(["filamentSensorEnable"]),False,False,0)
 
         self.io1.configureGPIO()
@@ -73,6 +76,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
         self.io3.configureGPIO()
         self.io4.configureGPIO()
         self.heater.configureGPIO()
+	self.fan.configureGPIO()
         self.filamentSensor.configureGPIO()
 
     def startTimer(self):
@@ -112,7 +116,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
                 self.enclosureCurrentHumidity = self.toFloat(sHum)
         self._plugin_manager.send_plugin_message(self._identifier, dict(enclosuretemp=self.enclosureCurrentTemperature,enclosureHumidity=self.enclosureCurrentHumidity))
         self.heaterHandler()
-		self.fanHandler()
+	self.fanHandler()
 
     def heaterHandler(self):
         if self.enclosureCurrentTemperature<float(self.enclosureSetTemperature) and self.heater.enable:
@@ -162,7 +166,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
     def setEnclosureTemperature(self):
         self.enclosureSetTemperature = flask.request.values["enclosureSetTemp"]
         self.heaterHandler()
-		self.fanHandler()
+	self.fanHandler()
         return flask.jsonify(enclosureSetTemperature=self.enclosureSetTemperature,enclosureCurrentTemperature=self.enclosureCurrentTemperature)
 
     @octoprint.plugin.BlueprintPlugin.route("/getEnclosureSetTemperature", methods=["GET"])
@@ -200,7 +204,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
 
             if  self.heater.enable:
                     self.enclosureSetTemperature = 0
-			if  self.fan.enable:
+	    if  self.fan.enable:
                     self.enclosureSetTemperature = 0
 
             if self.io1.autoShutDown:
@@ -224,7 +228,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
             heaterEnable=False,
             heaterPin=17,
             heaterActiveLow=True,
-			fanEnable=False,
+	    fanEnable=False,
             fanPin=18,
             fanActiveLow=True,
             dhtPin=4,
