@@ -112,6 +112,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
                 self.enclosureCurrentHumidity = self.toFloat(sHum)
         self._plugin_manager.send_plugin_message(self._identifier, dict(enclosuretemp=self.enclosureCurrentTemperature,enclosureHumidity=self.enclosureCurrentHumidity))
         self.heaterHandler()
+		self.fanHandler()
 
     def heaterHandler(self):
         if self.enclosureCurrentTemperature<float(self.enclosureSetTemperature) and self.heater.enable:
@@ -121,6 +122,14 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
             self._logger.info("Turning heater off.")
             self.heater.write(False)
 
+	def fanHandler(self):
+        if self.enclosureCurrentTemperature<float(self.enclosureSetTemperature) and self.fan.enable:
+            self._logger.info("Turning fan on.")
+            self.fan.write(True)
+        else:
+            self._logger.info("Turning fan off.")
+            self.fan.write(False)
+			
     def startFilamentDetection(self):
         if not GPIO.input(self.filamentSensor.pinNumber):
             self._logger.info("Started printing with no filament.")
@@ -153,6 +162,7 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
     def setEnclosureTemperature(self):
         self.enclosureSetTemperature = flask.request.values["enclosureSetTemp"]
         self.heaterHandler()
+		self.fanHandler()
         return flask.jsonify(enclosureSetTemperature=self.enclosureSetTemperature,enclosureCurrentTemperature=self.enclosureCurrentTemperature)
 
     @octoprint.plugin.BlueprintPlugin.route("/getEnclosureSetTemperature", methods=["GET"])
@@ -190,6 +200,8 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
 
             if  self.heater.enable:
                     self.enclosureSetTemperature = 0
+			if  self.fan.enable:
+                    self.enclosureSetTemperature = 0
 
             if self.io1.autoShutDown:
                 scheduler.enter(self.toFloat(self.io1.timeDelay), 1, self.io1.write, (False,))
@@ -212,6 +224,9 @@ class EnclosurePlugin(octoprint.plugin.StartupPlugin,
             heaterEnable=False,
             heaterPin=17,
             heaterActiveLow=True,
+			fanEnable=False,
+            fanPin=18,
+            fanActiveLow=True,
             dhtPin=4,
             filamentSensorPin=24,
             filamentSensorEnable=True,
