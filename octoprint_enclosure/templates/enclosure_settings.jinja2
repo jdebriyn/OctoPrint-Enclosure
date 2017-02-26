@@ -20,6 +20,28 @@
     </div>
 </form>
 
+<h4>{{ _('Fan') }}</h4>
+<form class="form-horizontal">
+    <div class="control-group">
+        <div class="controls">
+            <label class="checkbox">
+                <input type="checkbox" data-bind="checked: settings.plugins.enclosure.fanEnable">  {{ _('Enable Fan') }}
+            </label>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="settings-enclosure-fanpin">{{ _('Fan Pin') }}</label>
+        <div class="controls">
+            <input type="text" class="input-block-level" data-bind="value: settings.plugins.enclosure.fanPin">
+        </div>
+    </div>
+    <div class="controls">
+        <label class="checkbox">
+            <input type="checkbox" data-bind="checked: settings.plugins.enclosure.fanActiveLow">  {{ _('Fan Active Low') }}
+        </label>
+    </div>
+</form>
+
 
 <form class="form-horizontal" id="enclosure_settings_temperature">
 <h4>{{ _('Temperature Sensor') }}</h4>
