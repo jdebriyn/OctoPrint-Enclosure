@@ -1,4 +1,4 @@
-<h4>{{ _('Heater') }}</h4>
+<h4>{{ _('Fan') }}</h4>
 <table class="table table-bordered table-hover" style="table-layout: fixed; width: 100%; margin-top: 20px">
     <tr>
         <th style="width: 18%"></th>
@@ -13,13 +13,13 @@
             <input type="text" class="input-mini text-right tempInput" id="enclosureSetTemp" data-bind="attr: {placeholder: cleanTemperature(requestEnclosureSetTemperature())}">
             <span class="add-on">&deg;C</span>
                 <div class="btn-group">
-                    <button type="submit" data-bind="click: setTemperature, enable: settings.settings.plugins.enclosure.heaterEnable && isConnected()" class="btn">{{ _('Set') }}</button>
-                    <button class="btn dropdown-toggle" data-toggle="dropdown" data-bind="enable: settings.settings.plugins.enclosure.heaterEnable && isConnected()">
+                    <button type="submit" data-bind="click: setTemperature, enable: settings.settings.plugins.enclosure.fanEnable && isConnected()" class="btn">{{ _('Set') }}</button>
+                    <button class="btn dropdown-toggle" data-toggle="dropdown" data-bind="enable: settings.settings.plugins.enclosure.fanEnable && isConnected()">
                     <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#" data-bind="click: turnOffHeater">{{ _('Off') }}</a>
+                                <a href="#" data-bind="click: turnOffFan">{{ _('Off') }}</a>
                             </li>
                         </ul>
                 </div>
